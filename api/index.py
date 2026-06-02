@@ -122,8 +122,9 @@ class handler(BaseHTTPRequestHandler):
         # Se quiser testar com outros usuários depois pelo link (?username=teste)
         username = query_components.get("username", ["william-matheus-sv"])[0]
         
-        # ATENÇÃO: Substitua aqui pelo seu Token real do GitHub ou configure como ENV no Vercel
-        token_github = "SEU_TOKEN_AQUI" 
+       # Em vez de string pura, ele vai ler a variável de ambiente segura do Vercel
+        import os
+        token_github = os.getenv("SEU_TOKEN_AQUI")
         
         dados = buscar_dados_github(token_github, username)
         lista_langs = calcular_porcentagens(dados)
