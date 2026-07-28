@@ -13,42 +13,23 @@ def buscar_dados_github(token, username):
         
     url = "https://api.github.com/graphql"
     headers = {"Authorization": f"Bearer {token}"}
-    query = """
-    query($username: String!) {
-      user(login: $username) {
-        repositories(first: 100, ownerAffiliations: OWNER, isFork: false) {
-          nodes {
-            languages(first: 10, orderBy: {field: SIZE, direction: DESC}) {
-              edges {
-                size
-                node {
-                  name
-                  color
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-    """
+    query = """..."""
     try:
         response = requests.post(url, json={"query": query, "variables": {"username": username}}, headers=headers)
         if response.status_code == 200:
             data = response.json()
-
             if 'data' in data and data['data'] and data['data'].get('user'):
                 return data
             else:
                 print(f"ERRO: Estrutura inesperada: {data}")
-                return None  # <-- CORRIGIDO: Indentação alinhada corretamente
+                return None  # <-- CORRETO: agora está dentro do ELSE
         else:
             print(f"ERRO: Status {response.status_code}")
             return None
     except Exception as e:
         print(f"ERRO na requisição: {e}")
         return None
-
+        
 def calcular_porcentagens(dados_github):
     if not dados_github or 'data' not in dados_github or not dados_github['data'] or not dados_github['data']['user']:
         return DADOS_MOCK
