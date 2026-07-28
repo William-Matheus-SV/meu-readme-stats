@@ -13,7 +13,25 @@ def buscar_dados_github(token, username):
         
     url = "https://api.github.com/graphql"
     headers = {"Authorization": f"Bearer {token}"}
-    query = """..."""
+    query = """
+    query($username: String!) {
+      user(login: $username) {
+        repositories(first: 100, ownerAffiliations: OWNER, isFork: false) {
+          nodes {
+            languages(first: 10, orderBy: {field: SIZE, direction: DESC}) {
+              edges {
+                size
+                node {
+                  name
+                  color
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    """
     try:
         response = requests.post(url, json={"query": query, "variables": {"username": username}}, headers=headers)
         if response.status_code == 200:
@@ -22,7 +40,7 @@ def buscar_dados_github(token, username):
                 return data
             else:
                 print(f"ERRO: Estrutura inesperada: {data}")
-                return None  # <-- CORRETO: agora está dentro do ELSE
+                return None
         else:
             print(f"ERRO: Status {response.status_code}")
             return None
