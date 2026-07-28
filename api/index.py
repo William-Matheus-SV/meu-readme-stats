@@ -140,9 +140,14 @@ class handler(BaseHTTPRequestHandler):
         username = query_components.get("username", ["william-matheus-sv"])[0]
         
         token_github = os.getenv("TOKEN_GITHUB")
+        print(f"Token existe: {bool(token_github)}")
         
         dados = buscar_dados_github(token_github, username)
+        print(f"Dados recebidos: {dados is not None}")
+        
         lista_langs = calcular_porcentagens(dados)
+        print(f"Linguagens encontradas: {len(lista_langs)}")
+         
         svg_final = gerar_svg(lista_langs)
         
         self.send_response(200)
